@@ -1,0 +1,52 @@
+general-training:
+  device: cuda # {cpu vs gpu}
+  batch-size: 32
+  precision: 32
+  include-sub-words-info-in-mask: False
+dataset:
+  polarities: # Ay this moment only subset of {POS, NEG, NEU}
+    - POS
+    - NEG
+    - NEU
+model:
+  remove-intersected: False
+  add-true-spans: True
+  transformer:
+    lr: 0.000005
+    source: bert-base-uncased
+  span-creator:
+    lr: 0.0000003
+    extend-opinion-span-ranges:  [[0, 1], [0, -1], [1, 0], [-1, 0]]
+    extend-aspect-span-ranges: [[0, 1], [0, -1]]
+    all-opinion-spans-window: 4
+    all-aspect-spans-window: -1
+    max-number-of-spans: 10000
+    loss-weight: 0.1
+    add-aspects-to-opinions: True
+    add-opinions-to-aspects: True
+  span-classifier:
+    lr: 0.00003
+    loss-weight: 1.0
+  aggregator:
+    lr: 0.00003
+  sentiment-extender:
+    lr: 0.000002
+  pair-classifier:
+    lr: 0.000002
+    loss-weight: 1.5
+  sentiment-predictor:
+    lr: 0.000002
+    loss-weight: 2.0
+  triplet-extractor:
+    lr: 0.00003
+    loss-weight: 1.5
+    threshold: 0.42
+    num-negatives: 4
+    temperature: 0.5
+    negative-weight: 1.5
+    aspect-to-opinion: True
+    opinion-to-aspect: True
+encoder:
+  transformer:
+    source: bert-base-uncased
+    embedding-dimension: 768
